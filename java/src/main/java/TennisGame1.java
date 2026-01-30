@@ -1,6 +1,6 @@
 
 public class TennisGame1 implements TennisGame {
-    
+
     private int m_score1 = 0;
     private int m_score2 = 0;
     private String player1Name;
@@ -12,10 +12,11 @@ public class TennisGame1 implements TennisGame {
     }
 
     public void wonPoint(String playerName) {
-        if (playerName == "player1")
+        if (playerName.equals(player1Name)){
             m_score1 += 1;
-        else
+        } else if(playerName.equals(player2Name)) {
             m_score2 += 1;
+        }
     }
 
     public String getScore() {
@@ -37,7 +38,7 @@ public class TennisGame1 implements TennisGame {
                 default:
                         score = "Deuce";
                     break;
-                
+
             }
         }
         else if (m_score1>=4 || m_score2>=4)

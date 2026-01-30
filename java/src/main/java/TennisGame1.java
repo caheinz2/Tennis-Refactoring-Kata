@@ -1,10 +1,12 @@
 
 public class TennisGame1 implements TennisGame {
+    private static final int DEUCE_THRESHOLD = 3;
+    private static final int OVERTIME_THRESHOLD = 4;
 
     private int m_score1 = 0;
     private int m_score2 = 0;
-    private String player1Name;
-    private String player2Name;
+    private final String player1Name;
+    private final String player2Name;
 
     public TennisGame1(String player1Name, String player2Name) {
         this.player1Name = player1Name;
@@ -20,7 +22,7 @@ public class TennisGame1 implements TennisGame {
     }
 
     public String getScore() {
-        if (this.isTied())
+        if (isTied())
         {
             return getScoreInTie();
         }
@@ -39,68 +41,36 @@ public class TennisGame1 implements TennisGame {
     }
 
     private boolean isOvertime() {
-        return m_score1>=4 || m_score2>=4;
+        return m_score1>=OVERTIME_THRESHOLD || m_score2>=OVERTIME_THRESHOLD;
     }
 
     private String getScoreInTie() {
-        String score = "";
-        switch (m_score1)
-        {
-            case 0:
-                score = "Love-All";
-                break;
-            case 1:
-                score = "Fifteen-All";
-                break;
-            case 2:
-                score = "Thirty-All";
-                break;
-            default:
-                score = "Deuce";
-                break;
-
+        if(m_score1 >= DEUCE_THRESHOLD) {
+            return "Deuce";
+        } else {
+            return String.format("%s-All", getNameFromPoints(m_score1));
         }
-
-        return score;
     }
 
     private String getScoreInOvertime() {
-        String score = "";
-
-        int minusResult = m_score1-m_score2;
-        if (minusResult==1) score ="Advantage player1";
-        else if (minusResult ==-1) score ="Advantage player2";
-        else if (minusResult>=2) score = "Win for player1";
-        else score ="Win for player2";
-
-        return score;
+        int minusResult = m_score1 - m_score2;
+        if (minusResult == 1) return "Advantage player1";
+        else if (minusResult == -1) return "Advantage player2";
+        else if (minusResult >= 2) return "Win for player1";
+        else return "Win for player2";
     }
 
     private String getScoreInRegulation() {
-        String score = "";
-        int tempScore;
+        return String.format("%s-%s", getNameFromPoints(m_score1), getNameFromPoints(m_score2));
+    }
 
-        for (int i=1; i<3; i++)
-        {
-            if (i==1) tempScore = m_score1;
-            else { score+="-"; tempScore = m_score2;}
-            switch(tempScore)
-            {
-                case 0:
-                    score+="Love";
-                    break;
-                case 1:
-                    score+="Fifteen";
-                    break;
-                case 2:
-                    score+="Thirty";
-                    break;
-                case 3:
-                    score+="Forty";
-                    break;
-            }
-        }
-
-        return score;
+    private String getNameFromPoints(int point) {
+        return switch (point) {
+            case 0 -> "Love";
+            case 1 -> "Fifteen";
+            case 2 -> "Thirty";
+            case 3 -> "Forty";
+            default -> "";
+        };
     }
 }
